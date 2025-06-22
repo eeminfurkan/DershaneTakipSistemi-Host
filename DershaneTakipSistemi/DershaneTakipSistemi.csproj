@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-DershaneTakipSistemi-511275a6-ee85-4372-a126-bbe339de020d</UserSecretsId>
+	<SatelliteResourceLanguages>tr</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>
