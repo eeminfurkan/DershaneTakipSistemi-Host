@@ -130,7 +130,20 @@ namespace DershaneTakipSistemi // Kendi namespace'inizi kontrol edin
                 }
             }
             // --------------------------
-
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var dbContext = services.GetRequiredService<DershaneTakipSistemi.Data.ApplicationDbContext>();
+                    dbContext.Database.Migrate(); // Veritabanı göçlerini uygula
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "Veritabanı migration sırasında bir hata oluştu.");
+                }
+            }
             app.Run(); // Uygulamay� �al��t�r
         }
     }
