@@ -1,60 +1,52 @@
-using DershaneTakipSistemi.Data; // DbContext için
-using DershaneTakipSistemi.Models; // ViewModel için
+using DershaneTakipSistemi.Data;
+using DershaneTakipSistemi.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; // async metotlar ve CountAsync, SumAsync için
-using System.Diagnostics; // ErrorViewModel için
-using System.Linq; // Where, Sum vb. için
-using System.Threading.Tasks; // Task için
-using System; // DateTime için
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using System;
 
 namespace DershaneTakipSistemi.Controllers
 {
-    // HomeController'ý da yetkilendirebiliriz veya public býrakabiliriz.
-    // Þimdilik public býrakalým ki giriþ yapmadan da ana sayfa görülebilsin.
-    // [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _context; // DbContext eklendi
+        private readonly ApplicationDbContext _context;
 
-        // Constructor güncellendi: ILogger yanýna ApplicationDbContext eklendi
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
-            _context = context; // Inject edilen DbContext atanýyor
+            _context = context;
         }
 
-        // Index metodu async yapýldý ve ViewModel kullanacak þekilde güncellendi
         public async Task<IActionResult> Index()
         {
-            // Baþlangýçta veritabaný boþ olabilir, null kontrolleri ekleyelim
-            if (_context.Ogrenciler == null || _context.Odemeler == null)
+            if (_context.Ogrenciler == null || _context.KasaHareketleri == null)
             {
-                // Veritabaný setleri null ise boþ bir model veya hata döndür
-                // Þimdilik boþ view döndürelim veya basit bir ViewModel oluþturalým
-                // return Problem("Veritabaný tablolarý bulunamadý.");
-                return View(new DashboardViewModel()); // Boþ modelle View'ý döndür
+                return View(new DashboardViewModel());
             }
 
-
-            // ViewModel nesnesini oluþtur
+            // ViewModel nesnesini oluþtur ve yeni sisteme göre doldur
             var viewModel = new DashboardViewModel
             {
                 // Toplam öðrenci sayýsýný asenkron olarak al
                 ToplamOgrenciSayisi = await _context.Ogrenciler.CountAsync(),
 
-                // Aktif öðrenci sayýsýný asenkron olarak al (AktifMi == true olanlar)
+                // Aktif öðrenci sayýsýný asenkron olarak al
                 AktifOgrenciSayisi = await _context.Ogrenciler.CountAsync(o => o.AktifMi),
 
-                // Toplam ödeme tutarýný asenkron olarak al
-                // Eðer hiç ödeme yoksa SumAsync hata verebilir, bu yüzden önce kontrol edelim veya DefaultIfEmpty kullanalým
-                ToplamOdemeTutari = await _context.Odemeler.AnyAsync() ? await _context.Odemeler.SumAsync(p => p.Tutar) : 0,
+                // Toplam ödeme tutarýný KasaHareketleri'nden hesapla
+                // Sadece "Giriþ" olan ve kategorisi "OgrenciOdemesi" olanlarý topla
+                ToplamOdemeTutari = await _context.KasaHareketleri
+                                        .Where(k => k.HareketYonu == HareketYonu.Giris && k.Kategori == Kategori.OgrenciOdemesi)
+                                        .SumAsync(k => k.Tutar),
 
-                // Bugünkü ödeme sayýsýný asenkron olarak al
-                BugunkuOdemeSayisi = await _context.Odemeler.CountAsync(p => p.OdemeTarihi.Date == DateTime.Today)
+                // Bugünkü ödeme sayýsýný KasaHareketleri'nden hesapla
+                BugunkuOdemeSayisi = await _context.KasaHareketleri
+                                        .CountAsync(k => k.Kategori == Kategori.OgrenciOdemesi && k.Tarih.Date == DateTime.Today)
             };
 
-            // Doldurulmuþ ViewModel'i View'a gönder
             return View(viewModel);
         }
 

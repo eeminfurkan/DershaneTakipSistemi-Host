@@ -12,31 +12,23 @@ namespace DershaneTakipSistemi.Data
         }
 
         public DbSet<Ogrenci> Ogrenciler { get; set; }
-        public DbSet<Odeme> Odemeler { get; set; }
-        public DbSet<Personel> Personeller { get; set; } // <-- YENİ EKLENEN SATIR
-        public DbSet<Sinif> Siniflar { get; set; } // <-- YENİ SATIR
+        // public DbSet<Odeme> Odemeler { get; set; } // <-- BU SATIR SİLİNDİ
+        public DbSet<Personel> Personeller { get; set; }
+        public DbSet<Sinif> Siniflar { get; set; }
+        public DbSet<KasaHareketi> KasaHareketleri { get; set; } // <-- Bu satır önceki adımda eklenmişti
 
-
-
-        // ===== YENİ EKLENEN/GÜNCELLENEN METOT =====
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder); // Önce Identity yapılandırması çalışsın
+            base.OnModelCreating(modelBuilder);
 
-            // Odeme entity'sindeki Tutar özelliği için hassasiyet ayarı
-            modelBuilder.Entity<Odeme>() // Odeme entity'sini yapılandır
-        .HasOne(o => o.Ogrenci) // Odeme'nin bir Ogrenci'si var
-        .WithMany(p => p.Odemeler) // Ogrenci'nin birden çok Odeme'si var (Ogrenci'deki koleksiyon)
-        .HasForeignKey(o => o.OgrenciId) // Yabancı anahtar Odeme'deki OgrenciId
-        .OnDelete(DeleteBehavior.Restrict); // <-- SİLME DAVRANIŞINI AYARLA
-
-            // Başka özel yapılandırmalar gerekirse buraya eklenebilir
-            // Örneğin ilişki tanımları (ileride gerekirse):
-            // modelBuilder.Entity<Odeme>()
-            //     .HasOne(o => o.Ogrenci)
-            //     .WithMany() // Öğrencinin birden çok ödemesi olabilir (WithMany parametresiz basit ilişki)
-            //     .HasForeignKey(o => o.OgrenciId);
+            // Odeme entity'si ile ilgili olan ve aşağıdakine benzer blok SİLİNDİ
+            /*
+            modelBuilder.Entity<Odeme>() 
+                .HasOne(o => o.Ogrenci) 
+                .WithMany(p => p.Odemeler) 
+                .HasForeignKey(o => o.OgrenciId) 
+                .OnDelete(DeleteBehavior.Restrict);
+            */
         }
-        // ==========================================
     }
 }

@@ -127,7 +127,6 @@ namespace DershaneTakipSistemi.Controllers
             }
 
             ModelState.Remove(nameof(ogrenci.Sinifi)); // Navigation property için
-            ModelState.Remove(nameof(ogrenci.Odemeler)); // Diğer navigation property için
 
             if (ModelState.IsValid)
             {

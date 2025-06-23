@@ -21,7 +21,7 @@ namespace DershaneTakipSistemi.Models
 
         [Display(Name = "Cep Telefonu")]
         [StringLength(15)]
-        public string? CepTelefonu { get; set; } // Bu alanı iletişim için tuttuk.
+        public string? CepTelefonu { get; set; }
 
         [Display(Name = "Kayıt Tarihi")]
         [DataType(DataType.Date)]
@@ -32,13 +32,13 @@ namespace DershaneTakipSistemi.Models
         public bool AktifMi { get; set; } = true;
 
         [Display(Name = "Sınıfı")]
-        public int? SinifId { get; set; } 
+        public int? SinifId { get; set; }
 
         [ForeignKey("SinifId")]
         [Display(Name = "Sınıfı")]
-        public virtual Sinif? Sinifi { get; set; } 
+        public virtual Sinif? Sinifi { get; set; }
 
-        public virtual ICollection<Odeme>? Odemeler { get; set; }
+        // public virtual ICollection<Odeme>? Odemeler { get; set; } // <-- BU SATIR SİLİNDİ
 
         [NotMapped]
         [Display(Name = "Adı Soyadı")]
