@@ -1,8 +1,9 @@
-﻿using System; // DateTime kullanmak için bu gerekli olabilir
-using System.Collections.Generic; // ICollection için gerekli
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema; // HasPrecision için eklemiştik, [Column] için de gerekebilir.
-namespace DershaneTakipSistemi.Models // Namespace'in proje adınla eşleştiğinden emin ol
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DershaneTakipSistemi.Models
 {
     public class Ogrenci
     {
@@ -11,63 +12,36 @@ namespace DershaneTakipSistemi.Models // Namespace'in proje adınla eşleştiği
         [Required(ErrorMessage = "Ad alanı zorunludur.")]
         [Display(Name = "Adı")]
         [StringLength(50)]
-        public string Ad { get; set; } = string.Empty; // Null olmaması için başlangıç değeri atayalım
+        public string Ad { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Soyad alanı zorunludur.")]
         [Display(Name = "Soyadı")]
         [StringLength(50)]
-        public string Soyad { get; set; } = string.Empty; // Null olmaması için başlangıç değeri atayalım
-
-        [Display(Name = "T.C. Kimlik No")]
-        [StringLength(11, MinimumLength = 11, ErrorMessage = "TC Kimlik No 11 haneli olmalıdır.")]
-        public string? TCKimlik { get; set; } // Null olabilir
-
-        [Display(Name = "Doğum Tarihi")]
-        [DataType(DataType.Date)]
-        public DateTime? DogumTarihi { get; set; } // Null olabilir
+        public string Soyad { get; set; } = string.Empty;
 
         [Display(Name = "Cep Telefonu")]
         [StringLength(15)]
-        public string? CepTelefonu { get; set; } // Null olabilir
-
-        [Display(Name = "E-Posta")]
-        [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
-        [StringLength(100)]
-        public string? Email { get; set; } // Null olabilir
+        public string? CepTelefonu { get; set; } // Bu alanı iletişim için tuttuk.
 
         [Display(Name = "Kayıt Tarihi")]
         [DataType(DataType.Date)]
         [Required(ErrorMessage = "Kayıt Tarihi zorunludur.")]
-        public DateTime KayitTarihi { get; set; } = DateTime.Now; // Varsayılan değer
-
-        [Display(Name = "Adres")]
-        [DataType(DataType.MultilineText)]
-        public string? Adres { get; set; } // Null olabilir
+        public DateTime KayitTarihi { get; set; } = DateTime.Now;
 
         [Display(Name = "Aktif Mi?")]
-        public bool AktifMi { get; set; } = true; // Varsayılan değer
+        public bool AktifMi { get; set; } = true;
 
-        [Display(Name = "Notlar")]
-        [DataType(DataType.MultilineText)]
-        public string? Notlar { get; set; } // Null olabilir
-
-
-        // ===== YENİ EKLENEN İLİŞKİ ALANLARI =====
         [Display(Name = "Sınıfı")]
-        public int? SinifId { get; set; } // Foreign Key (Sınıfa atanmamış olabilir diye Nullable ?)
+        public int? SinifId { get; set; } 
 
-        [ForeignKey("SinifId")] // Bu property'nin SinifId Foreign Key'i ile ilişkili olduğunu belirtir
-        [Display(Name = "Sınıfı")] // <-- YENİ EKLENEN ATTRIBUTE
+        [ForeignKey("SinifId")]
+        [Display(Name = "Sınıfı")]
+        public virtual Sinif? Sinifi { get; set; } 
 
-        public virtual Sinif? Sinifi { get; set; } // Navigation Property (Sınıfa atanmamış olabilir diye Nullable ?)
-        // ========================================
-
-        // Navigation Property (Ödemeler için)
         public virtual ICollection<Odeme>? Odemeler { get; set; }
 
-        // AdSoyad birleşik göstermek için (Read-only property)
-        [NotMapped] // Bu alan veritabanına maplenmeyecek
+        [NotMapped]
         [Display(Name = "Adı Soyadı")]
-        public string AdSoyad => $"{Ad} {Soyad}"; // Ad ve Soyad'ı birleştirir
+        public string AdSoyad => $"{Ad} {Soyad}";
     }
 }

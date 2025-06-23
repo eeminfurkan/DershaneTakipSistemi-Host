@@ -58,11 +58,10 @@ namespace DershaneTakipSistemi.Controllers
         }
 
         // POST: Personels/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Ad,Soyad,TCKimlik,Gorevi,CepTelefonu,Email,IseBaslamaTarihi,AktifMi")] Personel personel)
+        // Bind attribute'ü sadeleştirildi.
+        public async Task<IActionResult> Create([Bind("Id,Ad,Soyad,Gorevi,AktifMi")] Personel personel)
         {
             if (ModelState.IsValid)
             {
@@ -90,11 +89,10 @@ namespace DershaneTakipSistemi.Controllers
         }
 
         // POST: Personels/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Ad,Soyad,TCKimlik,Gorevi,CepTelefonu,Email,IseBaslamaTarihi,AktifMi")] Personel personel)
+        // Bind attribute'ü sadeleştirildi.
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Ad,Soyad,Gorevi,AktifMi")] Personel personel)
         {
             if (id != personel.Id)
             {
