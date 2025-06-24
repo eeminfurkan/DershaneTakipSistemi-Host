@@ -29,26 +29,32 @@
             </div>
             <div class="form-group">
                 <label asp-for="HareketYonu" class="control-label"></label>
-                <select asp-for="HareketYonu" class="form-control"></select>
+                <select asp-for="HareketYonu" class="form-control" asp-items="ViewBag.HareketYonu"></select>
                 <span asp-validation-for="HareketYonu" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Kategori" class="control-label"></label>
-                <select asp-for="Kategori" class="form-control"></select>
+                <select asp-for="Kategori" class="form-control" asp-items="ViewBag.Kategori"></select>
                 <span asp-validation-for="Kategori" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="OdemeYontemi" class="control-label"></label>
-                <input asp-for="OdemeYontemi" class="form-control" />
+                <select asp-for="OdemeYontemi" class="form-control" asp-items="ViewBag.OdemeYontemi">
+                    <option value="">-- Yöntem Seçin --</option>
+                </select>
                 <span asp-validation-for="OdemeYontemi" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div id="ogrenci-alanı" class="form-group" style="display:none;">
                 <label asp-for="OgrenciId" class="control-label"></label>
-                <select asp-for="OgrenciId" class ="form-control" asp-items="ViewBag.OgrenciId"></select>
+                <select asp-for="OgrenciId" class="form-control" asp-items="ViewBag.OgrenciId">
+                    <option value="">-- Öğrenci Seçin --</option>
+                </select>
             </div>
-            <div class="form-group">
+            <div id="personel-alanı" class="form-group" style="display:none;">
                 <label asp-for="PersonelId" class="control-label"></label>
-                <select asp-for="PersonelId" class ="form-control" asp-items="ViewBag.PersonelId"></select>
+                <select asp-for="PersonelId" class="form-control" asp-items="ViewBag.PersonelId">
+                    <option value="">-- Personel Seçin --</option>
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -61,6 +67,44 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Kategori dropdown'ını seçelim
+            var kategoriDropdown = $("#Kategori");
+
+            // Gizlenip gösterilecek alanları seçelim
+            var ogrenciAlani = $("#ogrenci-alanı");
+            var personelAlani = $("#personel-alanı");
+
+            // Kategori değiştiğinde çalışacak fonksiyon
+            function kategoriyeGoreGosterGizle() {
+                var seciliKategori = kategoriDropdown.val();
+
+                // Tüm alanları önce gizle
+                ogrenciAlani.hide();
+                personelAlani.hide();
+
+                // Seçime göre ilgili alanı göster
+                if (seciliKategori === "OgrenciOdemesi") {
+                    ogrenciAlani.show();
+                } else if (seciliKategori === "Maas") {
+                    personelAlani.show();
+                }
+            }
+
+            // Sayfa ilk yüklendiğinde de fonksiyonu çalıştır (eğer form hata sonrası tekrar yüklenirse diye)
+            kategoriyeGoreGosterGizle();
+
+            // Kategori dropdown'ı her değiştiğinde fonksiyonu tekrar çalıştır
+            kategoriDropdown.on("change", function () {
+                kategoriyeGoreGosterGizle();
+            });
+        });
+    </script>
 }
