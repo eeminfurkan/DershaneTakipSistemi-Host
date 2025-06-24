@@ -15,7 +15,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.FirstOrDefault().Ad)
             </th>
-            
+
             <th>
                 @Html.DisplayNameFor(model => model.FirstOrDefault().SorumluOgretmen) @* Yeni Başlık *@
             </th>
@@ -30,7 +30,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Ad)
                 </td>
-                
+
                 <td>
                     @* Sorumlu öğretmen null olabilir, bu yüzden null kontrolü önemli *@
                     @(item.SorumluOgretmen != null ? item.SorumluOgretmen.AdSoyad : "Atanmamış")
